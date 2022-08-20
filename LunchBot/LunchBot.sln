@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunchBot", "LunchBot\LunchBot.csproj", "{97DE9168-C739-487E-BF8E-7F05028BAB0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunchBotCLI", "LunchBotCLI\LunchBotCLI.csproj", "{12E666F3-4E2B-4F1B-B6F2-73C9693A800B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{97DE9168-C739-487E-BF8E-7F05028BAB0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97DE9168-C739-487E-BF8E-7F05028BAB0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97DE9168-C739-487E-BF8E-7F05028BAB0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97DE9168-C739-487E-BF8E-7F05028BAB0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12E666F3-4E2B-4F1B-B6F2-73C9693A800B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12E666F3-4E2B-4F1B-B6F2-73C9693A800B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12E666F3-4E2B-4F1B-B6F2-73C9693A800B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12E666F3-4E2B-4F1B-B6F2-73C9693A800B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/PencilsConfiguration/ActualSeverity/@EntryValue">SUGGESTION</s:String>
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\Users\Callum.Rose\.nuget\packages\microsoft.bot.connector\4.16.1\lib\netstandard2.0\Microsoft.Bot.Connector.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\callu\.nuget\packages\csvhelper\28.0.0\lib\net6.0\CsvHelper.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\callu\.nuget\packages\shellprogressbar\5.2.0\lib\netstandard2.0\ShellProgressBar.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>

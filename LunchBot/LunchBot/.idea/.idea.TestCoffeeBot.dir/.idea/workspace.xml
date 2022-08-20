@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ca565117-f538-4c5d-a6aa-de038f272414" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/.idea.TestCoffeeBot/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/.idea.TestCoffeeBot/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/.idea.TestCoffeeBot/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/.idea.TestCoffeeBot/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TestCoffeeBot.sln" beforeDir="false" afterPath="$PROJECT_DIR$/../LunchBot.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assert.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assert.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BasicGroupSizer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BasicGroupSizer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BasicPartyScorer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BasicPartyScorer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Blocker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Blocker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChatHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ChatHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChatOrchestrator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ChatOrchestrator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommandBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CommandBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommandHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CommandHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CreatePartyCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CreatePartyCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DeliverPartyCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DeliverPartyCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DisplayPartyDataCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DisplayPartyDataCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DisplayStatsCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DisplayStatsCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EnumerableExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EnumerableExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GraphServiceClientFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GraphServiceClientFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Group.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Group.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroupChat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GroupChat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HalfMatrix.Iterator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HalfMatrix.Iterator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HalfMatrix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HalfMatrix.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HrPerson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HrPerson.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IGroupSelector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IGroupSelector.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IGroupSizer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IGroupSizer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IPartyScorer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IPartyScorer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LogWatch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LogWatch.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LoggerFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LoggerFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LunchBot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LunchBot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LunchData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LunchData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LunchDataFiler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LunchDataFiler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LunchDataHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LunchDataHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LunchedAndDepartmentPartyScorer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LunchedAndDepartmentPartyScorer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MainCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MessageAuthor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MessageAuthor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MyUser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Party.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Party.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyDataDisplayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyDataDisplayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyDataFiler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyDataFiler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyDataHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyDataHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PeopleFileReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PeopleFileReader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RandomGroupSelector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RandomGroupSelector.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RemindGroupsCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RemindGroupsCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SwapGroupSelector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SwapGroupSelector.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestCoffeeBot.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TitleAuthor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TitleAuthor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserFinder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserFinder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserHelper.UserMailComparer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserHelper.UserMailComparer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserIndexer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserIndexer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserIndexerFiler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserIndexerFiler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserIndexerHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserIndexerHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserMatrix.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserMatrix.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserMatrixFiler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserMatrixFiler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserMatrixHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserMatrixHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VenueChooser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/VenueChooser.cs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="2DSaD6EpPadfLxRmkBDVLscqNgR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <created>1660694816886</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1660694816886</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+</project>
