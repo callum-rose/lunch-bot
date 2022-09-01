@@ -7,7 +7,8 @@ using Prompt = McMaster.Extensions.CommandLineUtils.Prompt;
 
 namespace LunchBotCLI;
 
-[Command(Name = "deliver", Description = "Deliver the lunch from a generated party",
+[Command(Name = "deliver",
+    Description = "Deliver the lunch from a generated party",
     UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.StopParsingAndCollect,
     OptionsComparison = StringComparison.InvariantCultureIgnoreCase)]
 internal class DeliverPartyCommand : CommandBase
@@ -31,10 +32,13 @@ internal class DeliverPartyCommand : CommandBase
     private readonly TitleAuthor _titleAuthor;
     private readonly MessageAuthor _messageAuthor;
     private readonly PartyDataHelper _partyDataHelper;
+    private readonly PartyDataDisplayer _partyDataDisplayer;
 
-    public DeliverPartyCommand(ILogger logger, AppDataFiler appDataFiler, UserFinder userFinder, UserMatrixHandler userMatrixHandler,
+    public DeliverPartyCommand(ILogger logger, AppDataFiler appDataFiler, UserFinder userFinder,
+        UserMatrixHandler userMatrixHandler,
         ChatOrchestrator chatOrchestrator, LunchDataFiler lunchDataFiler, PartyDataFiler partyDataFiler,
-        TitleAuthor titleAuthor, MessageAuthor messageAuthor, PartyDataHelper partyDataHelper)
+        TitleAuthor titleAuthor, MessageAuthor messageAuthor, PartyDataHelper partyDataHelper,
+        PartyDataDisplayer partyDataDisplayer)
     {
         _logger = logger;
         _appDataFiler = appDataFiler;
@@ -46,6 +50,7 @@ internal class DeliverPartyCommand : CommandBase
         _titleAuthor = titleAuthor;
         _messageAuthor = messageAuthor;
         _partyDataHelper = partyDataHelper;
+        _partyDataDisplayer = partyDataDisplayer;
     }
 
     protected override async Task<int> OnExecute(CommandLineApplication app)
@@ -92,11 +97,23 @@ internal class DeliverPartyCommand : CommandBase
             return await CommandHelper.ExecuteRootCommand(app);
         }
 
+        Console.WriteLine("Party Data:");
+
+        _partyDataDisplayer.DisplayData(partyData);
+
         string demoTitle = _titleAuthor.GetTitle(PartyName!);
         string demoMessage =
-            _messageAuthor.CreateInitialChatMessage(new[] { "Charlie", "Mac", "Dennis", "Dee", "Frank", "Cricket" },
+            _messageAuthor.CreateInitialChatMessage(new[]
+                {
+                    "Charlie",
+                    "Mac",
+                    "Dennis",
+                    "Dee",
+                    "Frank",
+                    "Cricket"
+                },
                 "Dummy Venue");
-        
+
         Console.WriteLine($"Demo Title: \"{demoTitle}\"");
         Console.WriteLine($"Demo Message: \"{demoMessage}\"");
 

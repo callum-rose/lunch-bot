@@ -45,7 +45,7 @@ public class ChatOrchestrator
 
         GroupChat[] chats = new GroupChat[party.Groups.Count];
 
-        _venueChooser.Initialise(seed);
+        await _venueChooser.Initialise(seed);
 
         for (int i = 0; i < party.Groups.Count; i++)
         {

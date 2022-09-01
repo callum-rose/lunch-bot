@@ -6,7 +6,8 @@ using Prompt = McMaster.Extensions.CommandLineUtils.Prompt;
 
 namespace LunchBotCLI;
 
-[Command(Name = "create", Description = "Run the party generator to create the groups for a party",
+[Command(Name = "create",
+    Description = "Run the party generator to create the groups for a party",
     UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.StopParsingAndCollect,
     OptionsComparison = StringComparison.InvariantCultureIgnoreCase)]
 internal class CreatePartyCommand : CommandBase
@@ -53,6 +54,15 @@ internal class CreatePartyCommand : CommandBase
         if (string.IsNullOrEmpty(WorkSheetPath))
         {
             WorkSheetPath = Prompt.GetString("Enter People WorkSheet Path:");
+        }
+        else
+        {
+            bool useLast = Prompt.GetYesNo("Use last worksheet path?", false);
+
+            if (!useLast)
+            {
+                WorkSheetPath = Prompt.GetString("Enter People WorkSheet Path:");
+            }
         }
 
         if (!_peopleReader.TryLoadPeople(WorkSheetPath, out IReadOnlyList<HrPerson> people))

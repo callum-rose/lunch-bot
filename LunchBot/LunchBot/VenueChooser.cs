@@ -5,30 +5,29 @@ namespace LunchBot;
 
 public class VenueChooser
 {
-    private readonly IConfigurationRoot _configuration;
+    private readonly AppDataFiler _appDataFiler;
     private readonly ILogger _logger;
 
     private string[] _venues;
 
-    public VenueChooser(IConfigurationRoot configuration, ILogger logger)
+    public VenueChooser(AppDataFiler appDataFiler, ILogger logger)
     {
-        _configuration = configuration;
+        _appDataFiler = appDataFiler;
         _logger = logger;
     }
 
-    public void Initialise(int seed)
+    public async Task Initialise(int seed)
     {
         if (_venues is not null)
         {
             return;
         }
-        
-        _venues = _configuration.GetSection("VenuesToSuggest")
-            .GetChildren()
-            .Select(x => x.Value)
+
+        AppData appData = await _appDataFiler.Load();
+        _venues = appData.Venues
             .Shuffle(seed)
             .ToArray();
-        
+
         _logger.Information($"{nameof(VenueChooser)} initialised with seed: {seed}");
     }
 
@@ -38,7 +37,7 @@ public class VenueChooser
         {
             throw new Exception($"{nameof(VenueChooser)} not initialised");
         }
-        
+
         return _venues[groupIndex % _venues.Length];
     }
 }

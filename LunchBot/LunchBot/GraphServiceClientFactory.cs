@@ -32,6 +32,11 @@ internal class GraphServiceClientFactory
 
         DeviceCodeCredential deviceCodeCredential;
 
+        if (string.IsNullOrEmpty(_authenticationData.TenantId) || string.IsNullOrEmpty(_authenticationData.ClientId))
+        {
+            throw new Exception("TenantId or ClientId isn't set");
+        }
+        
         try
         {
             // https://docs.microsoft.com/dotnet/api/azure.identity.devicecodecredential
