@@ -16,13 +16,13 @@ public class LunchDataHelper
     public bool TryPromptForLunchData(out string partyDataPath)
     {
         string[] paths = Directory.EnumerateFiles(_lunchDataFiler.Directory)
-            .Where(p => Path.GetExtension(p) == PartyDataFiler.Extension)
+            .Where(p => Path.GetExtension(p) == LunchDataFiler.Extension)
             .OrderByDescending(File.GetCreationTime)
             .ToArray();
 
         if (paths.Length == 0)
         {
-            _logger.Error($"Could not find any {PartyDataFiler.Extension} files in \"{_lunchDataFiler.Directory}\"");
+            _logger.Error($"Could not find any {LunchDataFiler.Extension} files in \"{_lunchDataFiler.Directory}\"");
             partyDataPath = string.Empty;
             return false;
         }
