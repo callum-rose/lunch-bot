@@ -6,7 +6,7 @@ namespace LunchBotCLI;
     UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.StopParsingAndCollect,
     OptionsComparison = StringComparison.InvariantCultureIgnoreCase)]
 [Subcommand(typeof(InitialSetupCommand), typeof(CreatePartyCommand), typeof(DeliverPartyCommand),
-    typeof(DisplayPartyDataCommand), typeof(DisplayStatsCommand), typeof(RemindGroupsCommand))]
+    typeof(DisplayPartyDataCommand), typeof(DisplayStatsCommand), typeof(RemindGroupsCommand), typeof(TestCommand))]
 internal class MainCommand : CommandBase
 {
     protected override async Task<int> OnExecute(CommandLineApplication app)

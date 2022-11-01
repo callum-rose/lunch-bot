@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
     {
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json")
+            .AddJsonFile("appsettings.json", false, true)
             .Build();
 
         string logsDirectory = configuration.GetValue<string>("LogsDirectory");

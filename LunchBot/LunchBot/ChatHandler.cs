@@ -109,6 +109,7 @@ public class ChatHandler
         {
             Body = new ItemBody()
             {
+                ContentType = BodyType.Html,
                 Content = text
             }
         };

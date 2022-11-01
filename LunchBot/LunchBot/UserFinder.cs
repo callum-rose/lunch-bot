@@ -10,7 +10,7 @@ public partial class UserFinder
     private readonly GraphServiceClient _graphServiceClient;
     private readonly AppDataFiler _appDataFiler;
     private readonly ILogger _logger;
-    
+
     public UserFinder(GraphServiceClient graphServiceClient, AppDataFiler appDataFiler, ILogger logger)
     {
         _graphServiceClient = graphServiceClient;
@@ -30,9 +30,9 @@ public partial class UserFinder
 
         // TODO Bit janky but this ensures we're logged in before running lots of tasks to get the users
         var _ = await _graphServiceClient.Me.Request().GetAsync();
-        
+
         AppData appData = await _appDataFiler.Load();
-        
+
         ConcurrentBag<MyUser> users = new();
         ConcurrentBag<HrPerson> unfoundPeople = new();
 
@@ -58,7 +58,7 @@ public partial class UserFinder
         List<HrPerson> unfoundPeopleList = unfoundPeople.ToList();
 
         _logger.Information($"Found: {string.Join(", ", usersList.Select(u => u.ToString()))}");
-        
+
         if (unfoundPeopleList.Any())
         {
             _logger.Error($"Could not find: {string.Join(", ", unfoundPeopleList.Select(p => p.ToString()))}");
@@ -67,7 +67,7 @@ public partial class UserFinder
         return (usersList, unfoundPeopleList);
     }
 
-    private async Task<(bool success, MyUser user)> GetUser(HrPerson person, AppData appData)
+    public async Task<(bool success, MyUser user)> GetUser(HrPerson person, AppData appData)
     {
         (string firstName, string surname) = GetNames(person, appData);
 
@@ -77,7 +77,7 @@ public partial class UserFinder
         {
             return Fail();
         }
-        
+
         return currentUsers.Count switch
         {
             0 => Fail(),
@@ -108,11 +108,9 @@ public partial class UserFinder
 
     private async Task<(bool success, IList<User> users)> GetUsersWithName(string firstName, string surname)
     {
-        IGraphServiceUsersCollectionPage page;
-        
-        try
+        async Task<IGraphServiceUsersCollectionPage> GetPage(IGraphServiceUsersCollectionRequest request)
         {
-            page = await _graphServiceClient.Users.Request()
+            return await request
                 .Select(x => new
                 {
                     x.Id,
@@ -123,13 +121,28 @@ public partial class UserFinder
                 .Filter($"startsWith(givenName,'{firstName}') or startsWith(surname, '{surname}')")
                 .GetAsync();
         }
+
+        List<User> users = new();
+
+        try
+        {
+            IGraphServiceUsersCollectionRequest request = _graphServiceClient.Users.Request();
+            IGraphServiceUsersCollectionPage page;
+
+            do
+            {
+                page = await GetPage(request);
+                users.AddRange(page.CurrentPage);
+            }
+            while ((request = page.NextPageRequest) is not null);
+        }
         catch (Exception e)
         {
             _logger.Error(e, $"Can't get user: {firstName} {surname}");
-            return (false, Array.Empty<User>());
+            return (false, users);
         }
 
-        return (true, page.CurrentPage);
+        return (true, users);
     }
 
     private (bool success, MyUser user) FilterCorrectUser(HrPerson person, string firstName, string surname,
@@ -149,8 +162,10 @@ public partial class UserFinder
             string strippedUserNameGiven = Strip(u.GivenName);
             string strippedUserSurname = Strip(u.Surname);
 
-            bool isNameSimilar = (strippedUserNameGiven.Contains(strippedPersonName) || strippedPersonName.Contains(strippedUserNameGiven))
-                              && (strippedUserSurname.Contains(strippedPersonSurname) || strippedPersonSurname.Contains(strippedUserSurname));
+            bool isNameSimilar = (strippedUserNameGiven.Contains(strippedPersonName) ||
+                                  strippedPersonName.Contains(strippedUserNameGiven))
+                                 && (strippedUserSurname.Contains(strippedPersonSurname) ||
+                                     strippedPersonSurname.Contains(strippedUserSurname));
             return isNameSimilar;
         }
 

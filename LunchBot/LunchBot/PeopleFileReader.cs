@@ -74,7 +74,7 @@ public class PeopleFileReader
             peopleInternal.Add(person);
         }
 
-        _logger.Information("Read people: " + string.Join(", ", peopleInternal.Select(p => p.ToString())));
+        // _logger.Information("Read people: " + string.Join(", ", peopleInternal.Select(p => p.ToString())));
 
         people = peopleInternal;
 
