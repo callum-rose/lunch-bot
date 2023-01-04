@@ -20,4 +20,9 @@ internal class BasicPartyScorer : IPartyScorer
     {
         return newScore > (oldScore ?? double.MinValue);
     }
+
+    public bool IsAcceptable(Party party)
+    {
+        return true;
+    }
 }

@@ -11,4 +11,6 @@ public interface IPartyScorer
 
     double ScoreGroup(Group group);
     bool IsScoreBetter(double newScore, double? oldScore);
+
+    bool IsAcceptable(Party party);
 }

@@ -14,7 +14,7 @@ public class PartyDataDisplayer
 
         foreach (Group group in partyData.Party)
         {
-            IEnumerable<string> userNames = group.Select(u => $"{u.Name} {u.Surname}");
+            IEnumerable<string> userNames = group.Select(u => $"{u.Name} {u.Surname} ({u.Department.Substring(0, 4)})");
             string namesText = string.Join(", ", userNames);
             sb.AppendLine($"\t{group.Number}: {namesText}");
         }

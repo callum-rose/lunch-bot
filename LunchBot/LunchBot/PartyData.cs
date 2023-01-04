@@ -2,6 +2,8 @@
 
 public class PartyData
 {
+    public static readonly PartyData Invalid = new(Guid.Empty, 0, new Party(Array.Empty<Group>()));
+    
     public readonly Guid Id;
     public readonly int Seed;
     public readonly Party Party;

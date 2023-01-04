@@ -24,7 +24,15 @@ public class PartyGenerator
 
         using (LogWatch.Start(nameof(Generate), _logger))
         {
-            await _partyScorer.Initialise(users);
+            try
+            {
+                await _partyScorer.Initialise(users);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, $"Failed to init {nameof(_partyScorer)}");
+                return PartyData.Invalid;
+            }
 
             int offset = new Random().Next();
             MyUser[] allUsersArray = users.ToArray();
@@ -32,8 +40,13 @@ public class PartyGenerator
             int bestSeed = await GetBestPartySeed(offset, allUsersArray);
 
             Party bestParty = _groupSelector.Choose(users.ToArray(), bestSeed);
-
+            
             _logger.Information($"Best party found. Seed {bestSeed}");
+            
+            if (!_partyScorer.IsAcceptable(bestParty))
+            {
+                _logger.Error("Best party has failed the acceptability test");
+            }
 
             return new PartyData(Guid.NewGuid(), bestSeed, bestParty);
         }
