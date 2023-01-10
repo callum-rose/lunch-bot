@@ -3,6 +3,7 @@ using LunchBot;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Graph;
 using Serilog;
+using ShellProgressBar;
 
 namespace LunchBotCLI;
 
@@ -168,14 +169,27 @@ internal class RemindGroupsCommand : CommandBase
     {
         List<string> silentChatIds = new();
         
-        foreach (string chatId in lunchData.Chats.Select(c => c.ChatId))
+        ProgressBarOptions options = new()
         {
+            ForegroundColor = ConsoleColor.White,
+            DisplayTimeInRealTime = true
+        };
+
+        using ProgressBar progressBar = new(lunchData.Chats.Count, "Searching", options);
+        IProgress<double> progress = progressBar.AsProgress<double>();
+
+        for (int i = 0; i < lunchData.Chats.Count; i++)
+        {
+            string chatId = lunchData.Chats[i].ChatId;
+            
             bool chatUsersHaveMessaged = await ChatUsersHaveMessaged(chatId, conductor);
 
             if (!chatUsersHaveMessaged)
             {
                 silentChatIds.Add(chatId);
             }
+
+            progress.Report((double)i / (lunchData.Chats.Count - 1));
         }
 
         return silentChatIds;
