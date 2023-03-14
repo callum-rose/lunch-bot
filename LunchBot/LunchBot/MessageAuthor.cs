@@ -21,6 +21,17 @@ public class MessageAuthor
     
     public string CreateInitialChatMessage(IEnumerable<string> names, string venue)
     {
+        string formattedNames = GetFormattedNames(names);
+        return string.Format(_initialMessageFormat, formattedNames, venue);
+    }
+
+    public string CreateReminderMessage()
+    {
+        return string.Format(_reminderMessageFormat);
+    }
+
+    private static string GetFormattedNames(IEnumerable<string> names)
+    {
         string[] orderedNames = names.OrderBy(n => n).ToArray();
 
         StringBuilder namesBuilder = new();
@@ -40,11 +51,6 @@ public class MessageAuthor
             }
         }
 
-        return string.Format(_initialMessageFormat, namesBuilder, venue);
-    }
-
-    public string CreateReminderMessage()
-    {
-        return string.Format(_reminderMessageFormat);
+        return namesBuilder.ToString();
     }
 }

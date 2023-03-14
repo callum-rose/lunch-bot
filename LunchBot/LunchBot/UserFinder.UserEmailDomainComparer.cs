@@ -4,7 +4,7 @@ namespace LunchBot;
 
 public partial class UserFinder
 {
-    private class UserMailComparer : IComparer<User>
+    private class UserEmailDomainComparer : IComparer<User>
     {
         public int Compare(User x, User y)
         {

@@ -7,220 +7,228 @@ using ShellProgressBar;
 
 namespace LunchBotCLI;
 
-[Command(Name = "remind", Description = "Send a reminder to groups that haven't said anything yet",
-    UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.StopParsingAndCollect,
-    OptionsComparison = StringComparison.InvariantCultureIgnoreCase)]
+[Command(Name = "remind",
+	Description = "Send a reminder to groups that haven't said anything yet",
+	UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.StopParsingAndCollect,
+	OptionsComparison = StringComparison.InvariantCultureIgnoreCase)]
 internal class RemindGroupsCommand : CommandBase
 {
-    [Option(ShortName = "l", Description = "The absolute path of the lunch data file")]
-    private string LunchDataPath { get; set; }
+	private const int MinimumUserMessageCount = 1;
+	
+	[Option(ShortName = "l", Description = "The absolute path of the lunch data file")]
+	private string LunchDataPath { get; set; }
 
-    [Option(CommandOptionType.NoValue, ShortName = "d", Description = "Is this not a test")]
-    private bool IsNotDryRun { get; set; } = false;
+	[Option(CommandOptionType.NoValue, ShortName = "d", Description = "Is this not a test")]
+	private bool IsNotDryRun { get; set; } = false;
 
-    private bool IsDryRun => !IsNotDryRun;
+	private bool IsDryRun => !IsNotDryRun;
 
-    private readonly GraphServiceClient _graphServiceClient;
-    private readonly LunchDataFiler _lunchDataFiler;
-    private readonly LunchDataHelper _lunchDataHelper;
-    private readonly ILogger _logger;
-    private readonly MessageAuthor _messageAuthor;
-    private readonly ChatHandler _chatHandler;
-    private readonly AppDataFiler _appDataFiler;
+	private readonly GraphServiceClient _graphServiceClient;
+	private readonly LunchDataFiler _lunchDataFiler;
+	private readonly LunchDataHelper _lunchDataHelper;
+	private readonly ILogger _logger;
+	private readonly MessageAuthor _messageAuthor;
+	private readonly ChatHandler _chatHandler;
+	private readonly AppDataFiler _appDataFiler;
+	
+	public RemindGroupsCommand(GraphServiceClient graphServiceClient, LunchDataFiler lunchDataFiler,
+		LunchDataHelper lunchDataHelper, ILogger logger, MessageAuthor messageAuthor, ChatHandler chatHandler,
+		AppDataFiler appDataFiler)
+	{
+		_graphServiceClient = graphServiceClient;
+		_lunchDataFiler = lunchDataFiler;
+		_lunchDataHelper = lunchDataHelper;
+		_logger = logger;
+		_messageAuthor = messageAuthor;
+		_chatHandler = chatHandler;
+		_appDataFiler = appDataFiler;
+	}
 
-    public RemindGroupsCommand(GraphServiceClient graphServiceClient, LunchDataFiler lunchDataFiler,
-        LunchDataHelper lunchDataHelper, ILogger logger, MessageAuthor messageAuthor, ChatHandler chatHandler, 
-        AppDataFiler appDataFiler)
-    {
-        _graphServiceClient = graphServiceClient;
-        _lunchDataFiler = lunchDataFiler;
-        _lunchDataHelper = lunchDataHelper;
-        _logger = logger;
-        _messageAuthor = messageAuthor;
-        _chatHandler = chatHandler;
-        _appDataFiler = appDataFiler;
-    }
+	protected override async Task<int> OnExecute(CommandLineApplication app)
+	{
+		if (IsDryRun)
+		{
+			Console.WriteLine("Doing dry run");
+		}
+		else
+		{
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine("NOT A TEST, THIS IS THE REAL SHIT!!");
+			Console.ResetColor();
+		}
 
-    protected override async Task<int> OnExecute(CommandLineApplication app)
-    {
-        if (IsDryRun)
-        {
-            Console.WriteLine("Doing dry run");
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("NOT A TEST, THIS IS THE REAL SHIT!!");
-            Console.ResetColor();
-        }
-        
-        if (string.IsNullOrWhiteSpace(LunchDataPath))
-        {
-            if (!_lunchDataHelper.TryPromptForLunchData(out string lunchDataPath))
-            {
-                _logger.Information("Exiting");
-                return await CommandHelper.ExecuteRootCommand(app);
-            }
+		if (string.IsNullOrWhiteSpace(LunchDataPath))
+		{
+			if (!_lunchDataHelper.TryPromptForLunchData(out string lunchDataPath))
+			{
+				_logger.Information("Exiting");
+				return await CommandHelper.ExecuteRootCommand(app);
+			}
 
-            LunchDataPath = lunchDataPath;
-        }
+			LunchDataPath = lunchDataPath;
+		}
 
-        LunchData lunchData = await _lunchDataFiler.Load(LunchDataPath);
+		LunchData lunchData = await _lunchDataFiler.Load(LunchDataPath);
 
-        User conductor = await _graphServiceClient.Me.Request().GetAsync();
+		User conductor = await _graphServiceClient.Me.Request().GetAsync();
 
-        try
-        {
-            AppData appData = await _appDataFiler.Load();
-            Assert.ConductorIsExpected(conductor, appData.ConductorDisplayName);
-        }
-        catch (Exception e)
-        {
-            _logger.Information(e, "Exiting");
-            return await CommandHelper.ExecuteRootCommand(app);
-        }
-        
-        if (lunchData.WasDryRun)
-        {
-            Console.WriteLine("FYI this lunch was a dry run");
-        }
-        
-        if (!lunchData.Successful)
-        {
-            Console.WriteLine("FYI this lunch was not successful");
-        }
+		try
+		{
+			AppData appData = await _appDataFiler.Load();
+			Assert.ConductorIsExpected(conductor, appData.ConductorDisplayName);
+		}
+		catch (Exception e)
+		{
+			_logger.Information(e, "Exiting");
+			return await CommandHelper.ExecuteRootCommand(app);
+		}
 
-        IReadOnlyList<string> silentChatIds = await FindSilentChats(lunchData, conductor);
+		if (lunchData.WasDryRun)
+		{
+			Console.WriteLine("FYI this lunch was a dry run");
+		}
 
-        if (!silentChatIds.Any())
-        {
-            _logger.Information("There are no silent chats");
-            return await CommandHelper.ExecuteRootCommand(app);
-        }
+		if (!lunchData.Successful)
+		{
+			Console.WriteLine("FYI this lunch was not successful");
+		}
 
-        await DisplaySilentChats(silentChatIds, conductor.DisplayName);
+		IReadOnlyList<string> silentChatIds = await FindSilentChats(lunchData, conductor);
 
-        if (!Blocker.RequestUserCodeVerification("Enter code to send reminders"))
-        {
-            _logger.Warning("Incorrect code entered. Cancelling reminder");
-            return await CommandHelper.ExecuteRootCommand(app);
-        }
+		if (!silentChatIds.Any())
+		{
+			_logger.Information("There are no silent chats");
+			return await CommandHelper.ExecuteRootCommand(app);
+		}
 
-        await SendReminders(silentChatIds);
+		await DisplaySilentChats(silentChatIds, conductor.DisplayName);
 
-        _logger.Information("Finished sending reminder messages");
+		if (!Blocker.RequestUserCodeVerification("Enter code to send reminders"))
+		{
+			_logger.Warning("Incorrect code entered. Cancelling reminder");
+			return await CommandHelper.ExecuteRootCommand(app);
+		}
 
-        return await CommandHelper.ExecuteRootCommand(app);
-    }
+		await SendReminders(silentChatIds);
 
-    private async Task DisplaySilentChats(IReadOnlyList<string> silentChatIds, string conductorDisplayName)
-    {
-        StringBuilder stringBuilder = new("Chats with these members haven't messaged yet:\n");
+		_logger.Information("Finished sending reminder messages");
 
-        for (int i = 0; i < silentChatIds.Count; i++)
-        {
-            string chatId = silentChatIds[i];
-            
-            IChatMembersCollectionPage? members;
-            
-            try
-            {
-                members = await _graphServiceClient.Chats[chatId].Members.Request().GetAsync();
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, $"Could not find chat members: {chatId}");
-                continue;
-            }
+		return await CommandHelper.ExecuteRootCommand(app);
+	}
 
-            IEnumerable<string> usersNames = members.CurrentPage
-                .Where(m => m.DisplayName != conductorDisplayName)
-                .Select(m => m.DisplayName.Split(" ").First())
-                .OrderBy(n => n);
-            string membersStr = string.Join(", ", usersNames);
-            
-            stringBuilder.AppendLine($"\t{i}: {membersStr}");
-        }
-        
-        Console.WriteLine(stringBuilder);
-    }
+	private async Task DisplaySilentChats(IReadOnlyList<string> silentChatIds, string conductorDisplayName)
+	{
+		StringBuilder stringBuilder = new("Chats with these members haven't messaged yet:\n");
 
-    private async Task SendReminders(IEnumerable<string> chatIds)
-    {
-        int failedCount = 0;
+		for (int i = 0; i < silentChatIds.Count; i++)
+		{
+			string chatId = silentChatIds[i];
 
-        foreach (string chatId in chatIds)
-        {
-            bool success = await SendReminder(chatId);
+			IChatMembersCollectionPage? members;
 
-            if (!success)
-            {
-                failedCount++;
-            }
-        }
+			try
+			{
+				members = await _graphServiceClient.Chats[chatId].Members.Request().GetAsync();
+			}
+			catch (Exception e)
+			{
+				_logger.Error(e, $"Could not find chat members: {chatId}");
+				continue;
+			}
 
-        if (failedCount > 0)
-        {
-            _logger.Error($"Failed to send reminder to {failedCount} chats");
-        }
-    }
-    
-    private async Task<IReadOnlyList<string>> FindSilentChats(LunchData lunchData, User conductor)
-    {
-        List<string> silentChatIds = new();
-        
-        ProgressBarOptions options = new()
-        {
-            ForegroundColor = ConsoleColor.White,
-            DisplayTimeInRealTime = true
-        };
+			IEnumerable<string> usersNames = members.CurrentPage
+				.Where(m => m.DisplayName != conductorDisplayName)
+				.Select(m => m.DisplayName.Split(" ").First())
+				.OrderBy(n => n);
+			string membersStr = string.Join(", ", usersNames);
 
-        using ProgressBar progressBar = new(lunchData.Chats.Count, "Searching", options);
-        IProgress<double> progress = progressBar.AsProgress<double>();
+			stringBuilder.AppendLine($"\t{i}: {membersStr}");
+		}
 
-        for (int i = 0; i < lunchData.Chats.Count; i++)
-        {
-            string chatId = lunchData.Chats[i].ChatId;
-            
-            bool chatUsersHaveMessaged = await ChatUsersHaveMessaged(chatId, conductor);
+		Console.WriteLine(stringBuilder);
+	}
 
-            if (!chatUsersHaveMessaged)
-            {
-                silentChatIds.Add(chatId);
-            }
+	private async Task SendReminders(IEnumerable<string> chatIds)
+	{
+		int failedCount = 0;
 
-            progress.Report((double)i / (lunchData.Chats.Count - 1));
-        }
+		foreach (string chatId in chatIds)
+		{
+			bool success = await SendReminder(chatId);
 
-        return silentChatIds;
-    }
+			if (!success)
+			{
+				failedCount++;
+			}
+		}
 
-    private async Task<bool> SendReminder(string chatId)
-    {
-        string message = _messageAuthor.CreateReminderMessage();
+		if (failedCount > 0)
+		{
+			_logger.Error($"Failed to send reminder to {failedCount} chats");
+		}
+	}
 
-        bool success = await _chatHandler.TrySendMessage(IsDryRun, chatId, message);
-        return success;
-    }
+	private async Task<IReadOnlyList<string>> FindSilentChats(LunchData lunchData, User conductor)
+	{
+		List<string> silentChatIds = new();
 
-    private async Task<bool> ChatUsersHaveMessaged(string chatId, User conductor)
-    {
-        IChatMessagesCollectionPage messages;
+		ProgressBarOptions options = new()
+		{
+			ForegroundColor = ConsoleColor.White,
+			DisplayTimeInRealTime = true
+		};
 
-        try
-        {
-            messages = await _graphServiceClient.Chats[chatId].Messages.Request().GetAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.Error(e, $"Could not find chat messages: {chatId}");
-            return false;
-        }
+		using ProgressBar progressBar = new(lunchData.Chats.Count, "Searching", options);
+		IProgress<double> progress = progressBar.AsProgress<double>();
 
-        bool IsNotEvent(ChatMessage m) => m.EventDetail is null;
-        bool IsFromUser(ChatMessage m) => m.From.User.Id != conductor.Id;
+		for (int i = 0; i < lunchData.Chats.Count; i++)
+		{
+			string chatId = lunchData.Chats[i].ChatId;
 
-        bool hasSpoken = messages.Where(IsNotEvent).Any(IsFromUser);
-        return hasSpoken;
-    }
+			(bool success, int messageCount) = await GetUserMessageCount(chatId, conductor);
+
+			if (!success)
+			{
+				_logger.Error($"Failed to get user message count for {chatId}");
+			}
+			else if (messageCount <= MinimumUserMessageCount)
+			{
+				silentChatIds.Add(chatId);
+			}
+
+			progress.Report((double)i / (lunchData.Chats.Count - 1));
+		}
+
+		return silentChatIds;
+	}
+
+	private async Task<bool> SendReminder(string chatId)
+	{
+		string message = _messageAuthor.CreateReminderMessage();
+
+		bool success = await _chatHandler.TrySendMessage(IsDryRun, chatId, message);
+		return success;
+	}
+
+	private async Task<(bool success, int messageCount)> GetUserMessageCount(string chatId, User conductor)
+	{
+		IChatMessagesCollectionPage messages;
+
+		try
+		{
+			messages = await _graphServiceClient.Chats[chatId].Messages.Request().GetAsync();
+		}
+		catch (Exception e)
+		{
+			_logger.Error(e, $"Could not find chat messages: {chatId}");
+			return (false, 0);
+		}
+
+		bool IsNotEvent(ChatMessage m) => m.EventDetail is null;
+		bool IsNotApplication(ChatMessage m) => m.From.Application is null;
+		bool IsFromUser(ChatMessage m) => m.From.User?.Id != conductor.Id;
+
+		int userMessageCount = messages.Where(IsNotEvent).Where(IsNotApplication).Count(IsFromUser);
+		return (true, userMessageCount);
+	}
 }

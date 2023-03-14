@@ -6,18 +6,18 @@ using Serilog;
 
 namespace LunchBotCLI;
 
-[Command(Name = "test",
-    Description = "test",
+[Command(Name = "sendtest",
+    Description = "Send a test message",
     UnrecognizedArgumentHandling = UnrecognizedArgumentHandling.StopParsingAndCollect,
     OptionsComparison = StringComparison.InvariantCultureIgnoreCase)]
-internal class TestCommand : CommandBase
+internal class SendTestMessageCommand : CommandBase
 {
     private readonly GraphServiceClient _graphServiceClient;
     private readonly UserFinder _userFinder;
     private readonly AppDataFiler _appDataFiler;
     private readonly IConfigurationRoot _configuration;
 
-    public TestCommand(GraphServiceClient graphServiceClient, UserFinder userFinder, AppDataFiler appDataFiler, IConfigurationRoot configuration)
+    public SendTestMessageCommand(GraphServiceClient graphServiceClient, UserFinder userFinder, AppDataFiler appDataFiler, IConfigurationRoot configuration)
     {
         _graphServiceClient = graphServiceClient;
         _userFinder = userFinder;

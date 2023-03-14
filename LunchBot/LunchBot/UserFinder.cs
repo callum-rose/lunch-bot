@@ -155,7 +155,7 @@ public partial class UserFinder
 
         User user = currentUsers
             .Where(NameIsSimilar)
-            .MaxBy(u => u, new UserMailComparer());
+            .MaxBy(u => u, new UserEmailDomainComparer());
 
         bool NameIsSimilar(User u)
         {
