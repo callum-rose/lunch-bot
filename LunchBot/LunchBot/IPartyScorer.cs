@@ -2,7 +2,7 @@
 
 public interface IPartyScorer
 {
-    Task Initialise(IReadOnlyList<MyUser> users);
+    Task Initialise(IReadOnlyList<MyUser> users, Party lastParty);
     
     double ScoreParty(Party party)
     {

@@ -27,6 +27,7 @@ internal class CreatePartyCommand : CommandBase
     private readonly IGroupSizer _groupSizer;
     private readonly PartyDataFiler _partyDataFiler;
     private readonly PartyDataDisplayer _partyDataDisplayer;
+    private readonly PartyDataHelper _partyDataHelper;
 
     public CreatePartyCommand(ILogger logger,
         UserFinder userFinder,
@@ -36,7 +37,8 @@ internal class CreatePartyCommand : CommandBase
         PartyGenerator partyGenerator,
         IGroupSizer groupSizer,
         PartyDataFiler partyDataFiler,
-        PartyDataDisplayer partyDataDisplayer)
+        PartyDataDisplayer partyDataDisplayer,
+        PartyDataHelper partyDataHelper)
     {
         _logger = logger;
         _userFinder = userFinder;
@@ -47,6 +49,7 @@ internal class CreatePartyCommand : CommandBase
         _groupSizer = groupSizer;
         _partyDataFiler = partyDataFiler;
         _partyDataDisplayer = partyDataDisplayer;
+        _partyDataHelper = partyDataHelper;
     }
 
     protected override async Task<int> OnExecute(CommandLineApplication app)
@@ -93,7 +96,16 @@ internal class CreatePartyCommand : CommandBase
 
         await _userIndexerHandler.AddUsersAndSave(allUsers);
 
-        PartyData partyData = await _partyGenerator.Generate(allUsers);
+        Console.WriteLine("Enter index for the last party sent out:");
+
+        if (!_partyDataHelper.TryPromptForPartyData(out string lastPartyDataPath))
+        {
+            _logger.Information("Exiting");
+            return await CommandHelper.ExecuteRootCommand(app);
+        }
+
+        PartyData lastPartyData = await _partyDataFiler.Load(lastPartyDataPath);
+        PartyData partyData = await _partyGenerator.Generate(allUsers, lastPartyData.Party);
 
         try
         {

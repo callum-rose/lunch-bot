@@ -18,7 +18,7 @@ public class PartyGenerator
         _logger = logger;
     }
 
-    public async Task<PartyData> Generate(IReadOnlyList<MyUser> users)
+    public async Task<PartyData> Generate(IReadOnlyList<MyUser> users, Party lastParty)
     {
         _logger.Information("Starting party generation");
 
@@ -26,7 +26,7 @@ public class PartyGenerator
         {
             try
             {
-                await _partyScorer.Initialise(users);
+                await _partyScorer.Initialise(users, lastParty);
             }
             catch (Exception e)
             {

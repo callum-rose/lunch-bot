@@ -39,6 +39,14 @@ public class PartyDataHelper
 
         if (!int.TryParse(input, out int index))
         {
+            _logger.Error($"Could not parse input {input} as an integer");
+            partyDataPath = string.Empty;
+            return false;
+        }
+
+        if (index < 0 || index >= paths.Length)
+        {
+            _logger.Error("Index out of range");
             partyDataPath = string.Empty;
             return false;
         }

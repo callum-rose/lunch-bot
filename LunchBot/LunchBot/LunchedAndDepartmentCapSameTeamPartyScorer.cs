@@ -11,9 +11,9 @@ public class LunchedAndDepartmentCapSameTeamPartyScorer : IPartyScorer
 		_lunchedAndDepartmentPartyScorer = lunchedAndDepartmentPartyScorer;
 	}
 
-	public Task Initialise(IReadOnlyList<MyUser> users)
+	public Task Initialise(IReadOnlyList<MyUser> users, Party lastParty)
 	{
-		return _lunchedAndDepartmentPartyScorer.Initialise(users);
+		return _lunchedAndDepartmentPartyScorer.Initialise(users, lastParty);
 	}
 
 	public double ScoreGroup(Group group)

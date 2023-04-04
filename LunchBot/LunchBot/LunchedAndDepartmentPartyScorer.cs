@@ -4,16 +4,19 @@ public class LunchedAndDepartmentPartyScorer : IPartyScorer
 {
 	private readonly UserMatrixHandler _userMatrixHandler;
 
+	private readonly MyUser.Comparer _userComparer = new();
+	
 	private bool _isInitialised;
 	private UserMatrix _userMatrix;
 	private double _averageMeetCount;
-
+	private Party _lastParty;
+	
 	public LunchedAndDepartmentPartyScorer(UserMatrixHandler userMatrixHandler)
 	{
 		_userMatrixHandler = userMatrixHandler;
 	}
 
-	public async Task Initialise(IReadOnlyList<MyUser> users)
+	public async Task Initialise(IReadOnlyList<MyUser> users, Party lastParty)
 	{
 		if (_isInitialised)
 		{
@@ -23,6 +26,7 @@ public class LunchedAndDepartmentPartyScorer : IPartyScorer
 		_userMatrix = await _userMatrixHandler.GetCumulative();
 		_averageMeetCount = CalculateAverageMeetCount(users);
 		_isInitialised = true;
+		_lastParty = lastParty;
 	}
 
 	public double ScoreGroup(Group group)
@@ -41,7 +45,9 @@ public class LunchedAndDepartmentPartyScorer : IPartyScorer
 			.GroupBy(u => u.Department)
 			.Sum(g => g.Count() - 1) * 2;
 
-		return meetFactor + departmentPenalty;
+		int sameUsersPenalty = NumberUserPairsInSameGroupAsLastParty(group) * 4;
+
+		return meetFactor + departmentPenalty + sameUsersPenalty;
 	}
 
 	public bool IsScoreBetter(double newScore, double? oldScore)
@@ -52,6 +58,30 @@ public class LunchedAndDepartmentPartyScorer : IPartyScorer
 	public bool IsAcceptable(Party party)
 	{
 		return true;
+	}
+
+	private int NumberUserPairsInSameGroupAsLastParty(Group group)
+	{
+		int sameUserTotal = 0;
+		
+		foreach (MyUser user in group)
+		{
+			Group lastGroupForUser = _lastParty.SingleOrDefault(g => g.Any(u => u.Id == user.Id));
+
+			if (lastGroupForUser is null)
+			{
+				continue;
+			}
+
+			int sameUserCount = group.Where(u => u.Id != user.Id)
+				.Intersect(lastGroupForUser, _userComparer)
+				.Count();
+
+			sameUserTotal += sameUserCount;
+		}
+
+		// Divide by 2 because each pair will be counted twice here
+		return sameUserTotal / 2;
 	}
 
 	private int GetMetBeforeCount(Group group)

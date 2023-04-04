@@ -102,17 +102,7 @@ internal class DeliverPartyCommand : CommandBase
         _partyDataDisplayer.DisplayData(partyData);
 
         string demoTitle = _titleAuthor.GetTitle(PartyName!);
-        string demoMessage =
-            _messageAuthor.CreateInitialChatMessage(new[]
-                {
-                    "Charlie",
-                    "Mac",
-                    "Dennis",
-                    "Dee",
-                    "Frank",
-                    "Cricket"
-                },
-                "Dummy Venue");
+        string demoMessage = _messageAuthor.CreateTestInitialChatMessage();
 
         Console.WriteLine($"Demo Title: \"{demoTitle}\"");
         Console.WriteLine($"Demo Message: \"{demoMessage}\"");

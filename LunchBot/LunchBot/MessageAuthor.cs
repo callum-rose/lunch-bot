@@ -21,8 +21,15 @@ public class MessageAuthor
     
     public string CreateInitialChatMessage(IEnumerable<string> names, string venue)
     {
-        string formattedNames = GetFormattedNames(names);
+        string formattedNames = _initialMessageFormat.Contains("{0}") ? GetFormattedNames(names) : "";
+        venue = _initialMessageFormat.Contains("{1}") ? venue : "";
+        
         return string.Format(_initialMessageFormat, formattedNames, venue);
+    }
+
+    public string CreateTestInitialChatMessage()
+    {
+        return CreateInitialChatMessage(new[] { "Charlie", "Mac", "Dennis", "Dee", "Frank", "Cricket" }, "Dummy Venue");
     }
 
     public string CreateReminderMessage()

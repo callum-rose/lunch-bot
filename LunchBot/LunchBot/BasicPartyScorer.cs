@@ -2,7 +2,7 @@
 
 internal class BasicPartyScorer : IPartyScorer
 {
-    public Task Initialise(IReadOnlyList<MyUser> readOnlyList)
+    public Task Initialise(IReadOnlyList<MyUser> readOnlyList, Party lastParty)
     {
         return Task.CompletedTask;
     }
