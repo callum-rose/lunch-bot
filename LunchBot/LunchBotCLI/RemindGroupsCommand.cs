@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using LunchBot;
 using McMaster.Extensions.CommandLineUtils;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 using Serilog;
 using ShellProgressBar;
@@ -13,8 +14,6 @@ namespace LunchBotCLI;
 	OptionsComparison = StringComparison.InvariantCultureIgnoreCase)]
 internal class RemindGroupsCommand : CommandBase
 {
-	private const int MinimumUserMessageCount = 1;
-	
 	[Option(ShortName = "l", Description = "The absolute path of the lunch data file")]
 	private string LunchDataPath { get; set; }
 
@@ -30,10 +29,11 @@ internal class RemindGroupsCommand : CommandBase
 	private readonly MessageAuthor _messageAuthor;
 	private readonly ChatHandler _chatHandler;
 	private readonly AppDataFiler _appDataFiler;
-	
+	private readonly int _minMessageCount;
+
 	public RemindGroupsCommand(GraphServiceClient graphServiceClient, LunchDataFiler lunchDataFiler,
 		LunchDataHelper lunchDataHelper, ILogger logger, MessageAuthor messageAuthor, ChatHandler chatHandler,
-		AppDataFiler appDataFiler)
+		AppDataFiler appDataFiler, IConfigurationRoot configurationRoot)
 	{
 		_graphServiceClient = graphServiceClient;
 		_lunchDataFiler = lunchDataFiler;
@@ -42,6 +42,7 @@ internal class RemindGroupsCommand : CommandBase
 		_messageAuthor = messageAuthor;
 		_chatHandler = chatHandler;
 		_appDataFiler = appDataFiler;
+		_minMessageCount = configurationRoot.GetValue<int>("RemindMinimumMessageCount");
 	}
 
 	protected override async Task<int> OnExecute(CommandLineApplication app)
@@ -191,7 +192,7 @@ internal class RemindGroupsCommand : CommandBase
 			{
 				_logger.Error($"Failed to get user message count for {chatId}");
 			}
-			else if (messageCount <= MinimumUserMessageCount)
+			else if (messageCount <= _minMessageCount)
 			{
 				silentChatIds.Add(chatId);
 			}
