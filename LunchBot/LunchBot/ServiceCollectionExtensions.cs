@@ -61,6 +61,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<PartyGenerator>()
             .AddSingleton<PartyDataDisplayer>()
             .AddSingleton<LunchDataHelper>()
-            .AddSingleton<PartyDataHelper>();
+            .AddSingleton<PartyDataHelper>()
+            .AddSingleton<AvailableDateMessageAuthor>();
     }
 }

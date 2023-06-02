@@ -17,15 +17,18 @@ internal class SendTestMessageCommand : CommandBase
 	private readonly AppDataFiler _appDataFiler;
 	private readonly IConfigurationRoot _configuration;
 	private readonly MessageAuthor _messageAuthor;
+	private readonly AvailableDateMessageAuthor _availableDateMessageAuthor;
 
 	public SendTestMessageCommand(GraphServiceClient graphServiceClient, UserFinder userFinder,
-		AppDataFiler appDataFiler, IConfigurationRoot configuration, MessageAuthor messageAuthor)
+		AppDataFiler appDataFiler, IConfigurationRoot configuration, MessageAuthor messageAuthor,
+		AvailableDateMessageAuthor availableDateMessageAuthor)
 	{
 		_graphServiceClient = graphServiceClient;
 		_userFinder = userFinder;
 		_appDataFiler = appDataFiler;
 		_configuration = configuration;
 		_messageAuthor = messageAuthor;
+		_availableDateMessageAuthor = availableDateMessageAuthor;
 	}
 
 	protected override async Task<int> OnExecute(CommandLineApplication app)
@@ -41,6 +44,12 @@ internal class SendTestMessageCommand : CommandBase
 		ChatMessage message = CreateMessageData(text);
 		
 		ChatMessage? messageResponse = await _graphServiceClient.Chats[response.Id].Messages.Request().AddAsync(message);
+
+		foreach (var date in _availableDateMessageAuthor.GetMessages(DateTime.Today))
+		{
+			ChatMessage dateMessage = CreateMessageData(date);
+			ChatMessage? dateMessageResponse = await _graphServiceClient.Chats[response.Id].Messages.Request().AddAsync(dateMessage);
+		}
 		
 		return await CommandHelper.ExecuteRootCommand(app);
 	}

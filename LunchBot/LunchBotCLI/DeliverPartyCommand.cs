@@ -33,12 +33,13 @@ internal class DeliverPartyCommand : CommandBase
     private readonly MessageAuthor _messageAuthor;
     private readonly PartyDataHelper _partyDataHelper;
     private readonly PartyDataDisplayer _partyDataDisplayer;
+    private readonly AvailableDateMessageAuthor _availableDateMessageAuthor;
 
     public DeliverPartyCommand(ILogger logger, AppDataFiler appDataFiler, UserFinder userFinder,
         UserMatrixHandler userMatrixHandler,
         ChatOrchestrator chatOrchestrator, LunchDataFiler lunchDataFiler, PartyDataFiler partyDataFiler,
         TitleAuthor titleAuthor, MessageAuthor messageAuthor, PartyDataHelper partyDataHelper,
-        PartyDataDisplayer partyDataDisplayer)
+        PartyDataDisplayer partyDataDisplayer, AvailableDateMessageAuthor availableDateMessageAuthor)
     {
         _logger = logger;
         _appDataFiler = appDataFiler;
@@ -51,6 +52,7 @@ internal class DeliverPartyCommand : CommandBase
         _messageAuthor = messageAuthor;
         _partyDataHelper = partyDataHelper;
         _partyDataDisplayer = partyDataDisplayer;
+        _availableDateMessageAuthor = availableDateMessageAuthor;
     }
 
     protected override async Task<int> OnExecute(CommandLineApplication app)
@@ -103,9 +105,11 @@ internal class DeliverPartyCommand : CommandBase
 
         string demoTitle = _titleAuthor.GetTitle(PartyName!);
         string demoMessage = _messageAuthor.CreateTestInitialChatMessage();
+        IEnumerable<string> availableDates = _availableDateMessageAuthor.GetMessages(DateTime.Today);
 
         Console.WriteLine($"Demo Title: \"{demoTitle}\"");
         Console.WriteLine($"Demo Message: \"{demoMessage}\"");
+        Console.WriteLine($"Available Dates:\n {string.Join("\n ", availableDates)}");
 
         bool textOkay = Prompt.GetYesNo("Is the title and message okay?", false);
 
