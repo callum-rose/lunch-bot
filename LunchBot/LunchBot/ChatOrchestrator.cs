@@ -83,13 +83,10 @@ public class ChatOrchestrator
 			{
 				return (false, chats);
 			}
-		}
-
-		for (int i = 0; i < party.Groups.Count; i++)
-		{
+			
 			foreach (string dateMessage in _availableDateMessageAuthor.GetMessages(DateTime.Today))
 			{
-				bool successfulDateMessage = await _chatHandler.TrySendMessage(dryRun, chats[i].ChatId, dateMessage);
+				bool successfulDateMessage = await _chatHandler.TrySendMessage(dryRun, chatId, dateMessage);
 
 				if (!successfulDateMessage)
 				{
