@@ -62,7 +62,8 @@ public class LunchDataFiler
         {
             string dryRun = lunchData.WasDryRun ? "_dryRun" : "";
             string num = number.HasValue ? $"_{number.Value}" : "";
-            string fileName = $"{name}{dryRun}{num}{Extension}";
+            string date = DateTime.Now.ToString("yyyy-MM-dd");
+            string fileName = $"{name}_{date}_{dryRun}{num}{Extension}";
             return Path.Combine(Directory, fileName);
         }
 

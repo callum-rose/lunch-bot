@@ -57,7 +57,9 @@ public class PartyDataFiler
 
         string GetPath(int? number)
         {
-            string fileName = name + (number.HasValue ? $"_{number.Value}" : "") + Extension;
+            string date = DateTime.Now.ToString("yyyy-MM-dd");
+            string suffix = number.HasValue ? $"_{number.Value}" : "";
+            string fileName = $"{name}_{date}{suffix}{Extension}";
             return Path.Combine(Directory, fileName);
         }
 
