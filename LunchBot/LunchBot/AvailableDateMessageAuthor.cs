@@ -1,9 +1,23 @@
-﻿namespace LunchBot;
+﻿using Microsoft.Extensions.Configuration;
+
+namespace LunchBot;
 
 public class AvailableDateMessageAuthor
 {
+	private readonly bool _doUseDates;
+	
+	public AvailableDateMessageAuthor(IConfigurationRoot configuration)
+	{
+		_doUseDates = configuration.GetValue<bool>("SendAvailableDates");
+	}
+	
 	public IEnumerable<string> GetMessages(DateTime from)
 	{
+		if (!_doUseDates)
+		{
+			return Enumerable.Empty<string>();
+		}
+		
 		return GetDates(from).Select(GetMessageForDate);
 	}
 

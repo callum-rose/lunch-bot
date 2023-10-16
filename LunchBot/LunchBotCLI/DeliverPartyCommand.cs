@@ -105,11 +105,13 @@ internal class DeliverPartyCommand : CommandBase
 
         string demoTitle = _titleAuthor.GetTitle(PartyName!);
         string demoMessage = _messageAuthor.CreateTestInitialChatMessage();
-        IEnumerable<string> availableDates = _availableDateMessageAuthor.GetMessages(DateTime.Today);
+        var availableDates = _availableDateMessageAuthor.GetMessages(DateTime.Today).ToArray();
 
         Console.WriteLine($"Demo Title: \"{demoTitle}\"");
         Console.WriteLine($"Demo Message: \"{demoMessage}\"");
-        Console.WriteLine($"Available Dates:\n {string.Join("\n ", availableDates)}");
+        Console.WriteLine(availableDates.Any()
+            ? $"Available Dates:\n {string.Join("\n ", availableDates)}"
+            : "Not sending available dates");
 
         bool textOkay = Prompt.GetYesNo("Is the title and message okay?", false);
 
